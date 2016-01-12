@@ -1,0 +1,23 @@
+\chapter{Conclusions}
+
+This work provided an introduction to the inner workings of a particular ICN 
+approach via experimentation with CCN's open source implementation Project 
+CCNx.\vertbreak
+
+We have tested CCNx by mounting and running several experiments over a simple 
+testbed of constrained devices (low CPU power and memory capabilities). We 
+verify that a direct application of CCNx to such device types is not feasible, 
+considering the test cases presented here.\vertbreak
+
+As future work, since Web Caches and CCNx both at rather high layers of the 
+network stack (implementing a similar functionality) it could be interesting to 
+compare the performance of CCNx against the use of intermediate Web Caches. 
+Tests with a modified version of the \verb+ccnchat+ application may prove 
+useful for evaluating exchange patterns with small and sporadic messages, the 
+scenario often found in M2M, WSNs or VANETS.\vertbreak
+
+The results and insights provided by this work can prove useful for alterations 
+of CCNx at both conceptual (e.g. alternatives to the transport mechanisms 
+provided by \verb+ccncatchunks2+) and implementation (e.g. throughput limits 
+imposed by \verb+ccnsendchunks+) levels, specially when regarding the 
+application of CCNx to applications using constrained devices.

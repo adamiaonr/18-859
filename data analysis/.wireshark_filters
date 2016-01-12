@@ -1,0 +1,3 @@
+ip.src == 192.168.1.101 && (ccn.contenttype || not (ccn.type == interest)) && not nbns && not icmp
+ip.src == 192.168.1.101 && ccn.contenttype && not nbns && not icmp
+ccn && not ccn.contenttype && ip.src == 192.168.1.100 && not nbns && not icmp

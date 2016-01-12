@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# keep looping
+c=1
+
+while [ $c -eq 1 ]
+do
+    # save the output of the date command
+    DATE_TXT="#date-txt: "$(date)
+    DATE_TMS="#date-tms: "$(date +%s)
+
+    # output the lines to the output file given as argument
+    echo $DATE_TXT >> $1
+    echo $DATE_TMS >> $1
+
+    # selective output of the top command to the output file in $1 (top 3 lines + 
+    # those with references to 'tcpdump' and 'ccnd'
+    top -b -n 1 | awk '{if(NR<5)print}' >> $1
+    top -b -n 1 | grep 'tcpdump\|ccnd' | grep -v 'grep' >> $1
+
+    # wait for 1 second
+    sleep 1
+done
+
+exit

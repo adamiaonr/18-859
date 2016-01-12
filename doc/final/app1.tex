@@ -1,0 +1,90 @@
+\chapter{CCNx Quick Reference}
+\label{app:ccnx-specificss}
+
+Here we provide a quick reference for several CCNx commands and applications 
+used in this work. We follow a similar section structure as that of 
+Section~\ref{subsec:ccnx-specifics}.
+
+\section{CCNx Forwarding Tables}
+
+To add a route allowing a node \verb+ccnx1+ to forward Interest packets 
+directed at content domain \verb+ccnx:/content/files/+, the following 
+\verb+ccndc+ command shall be used:
+
+\begin{verbatim}
+user@ccnx1:-# ccndc add ccnx:/content/files/ udp 172.16.1.101
+\end{verbatim}
+
+This command will tell \verb+ccnd+ to forward any Interests for content matching 
+the prefix \verb+ccnx:/content/files/+ to the IP address 172.16.1.101, over UDP.
+
+\section{Disseminating Content with CCNx}
+
+\cprotect\subsection{Usage of \verb+ccnr+ and \verb+ccngetfile+}
+
+In CCNx, content sources use a specific repository application for storing 
+content and make it available in CCNx networks by responding to 
+matching Interests, \verb+ccnr+~\cite{website:ccnx-commands}. The following 
+sequence of commands initializes a repository and inserts a file into it, 
+making it addressable via the name \verb+ccnx:/CCN_REPO_DIR/file1.dat+:
+
+\begin{verbatim}
+user@cs:-# ccnr
+user@cs:-# ccnputfile ccnx:/CCN_REPO_DIR/file1.dat file1.dat
+\end{verbatim}
+
+The 
+\verb+ccngetfile+ application~\cite{website:ccnx-commands} 
+can then be used to release Interest packets to the CCNx network, querying 
+for particular content, e.g. (assuming that 
+\verb+CCN_REPO_DIR+ = \verb+/content/files+):
+
+\begin{verbatim}
+user@ccnx1:-# ccngetfile ccnx:/content/files/file1.dat file1.dat.local
+\end{verbatim}
+
+The command above releases Interests for the content 
+\verb+ccnx:/content/files/file1.dat+ and saves the file locally as 
+\verb+file1.dat.local+. Being a CCNx application, it follows CCN's `1 Data packet 
+per Interest' principle~\cite{Jacobson2009}, but with pipelining of Interests, 
+i.e. the application immediately releases $N$ Interest packets into the network 
+before the actual reception of Data packets. The actual behavior of this 
+exchange (flow control) is analyzed in some of the tests specified in 
+Section~\ref{sec:protocol}.
+
+\cprotect\subsection{Usage of \verb+ccnsendchunks+ and \verb+ccncatchunks2+}
+
+We provide examples of the use 
+of both commands below, for an exchange of content 
+\verb+ccnx:/content/files/file1.dat+ between nodes \verb+ccnx1+ (sender) 
+and \verb+ccnx2+ (receiver):
+
+\begin{verbatim}
+
+user@ccnx1:-# ccnsendchunks -b 4096 ccnx:/content/files/file1.dat < file1.dat.ccnx1
+
+(...)
+
+user@ccnx2:-# ccncatchunks2 -p 31 ccnx:/content/files/file1.dat > file1.dat.ccnx2
+
+\end{verbatim}
+
+With the combination of commands shown above, \verb+ccnx1+ gets ready to 
+send Data packets, each one containing blocks of 4096 bytes of the 
+file \verb+file1.dat.ccnx1+. This content may be addressed via 
+the content name \verb+ccnx:/content/files/file1.dat+. On the other end, 
+\verb+ccnx2+ starts sending batches of (at most) 31 Interest packets for the 
+content \verb+ccnx:/content/files/file1.dat+, saving the file as 
+\verb+file1.dat.ccnx2+ when all the chunks are finally transmitted.
+
+\cprotect\subsection{Usage of VLC plugin}
+
+E.g. for reproducing some content addressed 
+as \verb+ccnx:/content/files/video.avi+, located somewhere in the 
+networks, VLC should be called in the following way (note the triple slash `\slash'):
+
+\begin{verbatim}
+
+user@ccnx1:-# vlc ccnx:///content/files/video.avi
+
+\end{verbatim}

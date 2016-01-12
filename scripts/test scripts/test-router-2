@@ -1,0 +1,62 @@
+#!/bin/bash
+
+if [ $# -ne 3 ]
+then
+    echo "Usage: $0 [CCNx IP TO FORWARD INTERESTS] [NR OF TEST ROUTER] [TEST ID]"
+    echo "E.g. $0 192.168.1.72 1 video"
+    exit 1
+fi
+
+# mount the usb storage device
+mount /dev/sda1 /mnt/usb-storage &
+
+# start ccnd
+ccnd &
+
+# give it some time
+sleep 5
+
+# add CCNx routes, to IP address given as argument
+ccndc add ccnx:/ccnx.org udp $1 &
+ccndc add ccnx:/home/adamiaonr/Workbench/ccnx/files/ udp $1 &
+
+# free up some memory by dropping caches
+echo 3 > /proc/sys/vm/drop_caches &
+
+# start tcpdump on wlan0 and eth1 interfaces
+#FIXME: we're using 1600 for the truncation parameter, hope this is enough...
+DATE=$(date +%s)
+
+#tcpdump -i wlan0 -s 1600 -w /mnt/usb-storage/capture-wlan0-ccnx$2-$3-$DATE &
+tcpdump -i eth1 -s 1600 -w /mnt/usb-storage/capture-eth1-ccnx$2-$3-$DATE &
+tcpdump -i eth0 -s 1600 -w /mnt/usb-storage/capture-eth0-ccnx$2-$3-$DATE &
+
+# start CPU + MEM script
+sh /mnt/usb-storage/cpu-mem-stats /mnt/usb-storage/cpu-mem-stats-$2-$3-$DATE.stat &
+
+# wait for user to finish the test
+while true
+do
+    # prompt user, and read command line argument
+    read -p "Stop the test now? " answer
+
+    # handle the input we were given
+    case $answer in
+
+        [yY]* )
+
+                killall tcpdump
+                killall ccnd
+
+                break;;
+
+        * ) 
+                echo "I'll only accept 'yes' as an answer...";;
+  esac
+done
+
+# scripts started by this script will be stopped anyway (i thinks this makes 
+# this script kill itself, but well)...
+killall sh
+exit
+

@@ -1,0 +1,39 @@
+\documentclass[a4paper,10pt]{report}
+%
+%--------------------   start of the 'preamble'
+%
+\input{preamble}
+%
+%---------------------   end of the 'preamble'
+%
+\begin{document}
+%-----------------------------------------------------------
+\title{\textbf{Understanding Content Dissemination using Content Centric 
+Networking} \\ {\large Distributed Systems and Networking Project Report}}
+\author{António Rodrigues (up200400437@fe.up.pt)}
+\maketitle
+%-----------------------------------------------------------
+%\begin{abstract}\centering
+%A couple of sentences on three or four lines to summarise your work.\\ 
+%This is a \LaTeX\ template for undergraduate project reports.\\
+%Its detailed contents evolve to reflect FAQs.
+%\end{abstract}
+%-----------------------------------------------------------
+\tableofcontents
+%-----------------------------------------------------------
+\include{intro}
+\include{ccn}
+\include{methodology}
+\include{exp-results}
+\include{conclusions}
+%-----------------------------------------------------------
+%\addcontentsline{toc}{chapter}{\numberline{}Bibliography}
+%\include{biblio}
+\bibliographystyle{unsrt}
+\bibliography{dsn,dsn-non-paper}
+%-----------------------------------------------------------
+\appendix
+\include{app1}
+\include{app2}
+%-----------------------------------------------------------
+\end{document}

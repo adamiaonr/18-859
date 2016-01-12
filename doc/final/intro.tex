@@ -1,0 +1,64 @@
+\chapter{Introduction}
+\label{chap:intro}
+
+Information-Centric Networking (ICN) is a field of research which advocates for 
+a new communication paradigm for the Internet: the departure from 
+its host-centric model and the adoption of a content-centric model, enabling 
+the direct addressing of content, independently of its 
+location. This position is motivated by increasing primary use of the Internet 
+for content dissemination, rather than for explicit communication between 
+hosts~\cite{Xylomenos2013}.\vertbreak 
+
+This work was prepared as an `hands-on' introduction to 
+the field of ICN by taking advantage of the software packages offered by 
+Project CCNx~\cite{website:ccnx}, an implementation of the Content Centric 
+Networking (CCN) architecture~\cite{Jacobson2009}. We 
+run a series of experiments using a simple and exemplifying testbed, evaluating 
+the performance of the CCNx implementation over several network parameters and 
+its suitability for use in constrained devices.
+
+\section{Content Centric Networking}
+\label{sec:intro-ccnx}
+
+Content-Centric Networking (CCN)~\cite{Jacobson2009} presents itself as a 
+novel networking paradigm which moves away from the host-centric communication 
+model: instead of retrieving content by first determining its location, CCN 
+proposes accessing content directly, independently of its location in the 
+network, by using content names as addresses.\vertbreak
+
+Communication in CCNs is similar to a publish\slash subscribe model, in the 
+sense that it is also driven by 
+the consumers of data --- the subscribers --- which release Interest packets 
+into the network, eventually received by other CCN nodes. These packets 
+announce a subscriber's desire to fetch particular content via the specification 
+of a content name field. Holders of content which matches the content name 
+--- the publishers --- respond with Data packets, also referred to as Content 
+Objects.
+
+\section{Objectives}
+
+The main objectives of this work are the following:\vertbreak
+
+\textbf{1)} Acquire detailed knowledge about a particular ICN approach, by 
+            planning and deploying a simple ICN testbed based on 
+            Project CCNx~\cite{website:ccnx}, an implementation of the Content 
+            Centric Networking (CCN) approach~\cite{Jacobson2009}.\vertbreak
+
+\textbf{2)} Validate some of the benefits claimed by ICN approaches and in some 
+            cases compare the network performance of CCNx against equivalent 
+            `host centric' solutions. The 
+            measurement parameters may vary with each test. Since the 
+            objective of CCNs is to reduce latency experienced by clients and 
+            network traffic load towards the origins of 
+            content~\cite{Jacobson2009}, most of the evaluations are made by 
+            comparing values of throughput, latency and network traffic 
+            load.\vertbreak
+
+\textbf{3)} We have the clear intention to test the performance of CCNx on 
+            `real-world' constrained devices, differing our work from other 
+            studies (of different nature), performed in the near-past by Vahlenkamp et 
+            al.~\cite{Wahlisch2012, Vahlenkamp2012}. The idea is to evaluate 
+            how suitable is the CCNx implementation for direct application 
+            in constrained devices such those applied to e.g. Wireless Sensor 
+            Networks (WSNs) or Vehicular Networks (VANETS)~\cite{Amadeo2013,Grassi2013}.
+

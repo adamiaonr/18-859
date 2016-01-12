@@ -1,0 +1,71 @@
+#!/bin/bash
+
+if [ $# -ne 3 ]
+then
+    echo "Usage: $0 [NR OF TEST PC] [TEST ID] [FILE TO RETRIEVE]"
+    echo "E.g. $0 1 multihop_5 file01"
+    exit 1
+fi
+
+# start tcpdump on wlan0 and eth1 interfaces
+#FIXME: we're using s0 for the truncation parameter, i.e. no limits: since 
+# we're at PCs, we've plenty of memory to do this...
+DATE=$(date +%s)
+
+if [ ! -d "/home/adamiaonr/Workbench/ccnx/files/tests/" ]; then
+
+    mkdir -p /home/adamiaonr/Workbench/ccnx/files/tests/
+fi
+
+tcpdump -i wlan0 -s0 -w /home/adamiaonr/Workbench/ccnx/files/tests/capture-wlan0-pc$1-$2-$DATE &
+tcpdump -i eth1 -s0 -w /home/adamiaonr/Workbench/ccnx/files/tests/capture-eth1-pc$1-$2-$DATE &
+tcpdump -i eth0 -s0 -w /home/adamiaonr/Workbench/ccnx/files/tests/capture-eth0-pc$1-$2-$DATE &
+
+# wait for user to start the test
+while true
+do
+    # prompt user, and read command line argument
+    read -p "Start the test now? " answer
+
+    # handle the input we were given
+    case $answer in
+
+        [yY]* )
+
+                # do nothing and continue
+
+                break;;
+
+        * ) 
+                echo "I'll only accept 'yes' as an answer...";;
+  esac
+done
+
+# load the file (saved on a CCN repository somewhere) via ccngetfile
+if [ ! -d "/home/adamiaonr/Workbench/ccnx/files/transfers/" ]; then
+
+    mkdir -p /home/adamiaonr/Workbench/ccnx/files/transfers/
+fi
+
+# wait for user to end the test
+while true
+do
+    # prompt user, and read command line argument
+    read -p "Stop the test now? " answer
+
+    # handle the input we were given
+    case $answer in
+
+        [yY]* )
+
+                killall tcpdump
+
+                break;;
+
+        * ) 
+                echo "I'll only accept 'yes' as an answer...";;
+  esac
+done
+
+exit
+

@@ -1,0 +1,51 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]
+then
+    echo "Usage: $0 [NR OF TEST ROUTER] [TEST ID]"
+    echo "E.g. $0 1 video"
+    exit 1
+fi
+
+# mount the usb storage device
+mount /dev/sda1 /mnt/usb-storage &
+
+# free up some memory by dropping caches
+echo 3 > /proc/sys/vm/drop_caches &
+
+# start tcpdump on wlan0 and eth1 interfaces
+#FIXME: we're using 1600 for the truncation parameter, hope this is enough...
+DATE=$(date +%s)
+
+#tcpdump -i wlan0 -s0 -w /mnt/usb-storage/capture-wlan0-ccnx$1-$2-$DATE &
+tcpdump -i eth1 -s0 -w /mnt/usb-storage/capture-eth1-ccnx$1-$2-$DATE &
+tcpdump -i eth0 -s0 -w /mnt/usb-storage/capture-eth0-ccnx$1-$2-$DATE &
+
+# start CPU + MEM script
+sh /mnt/usb-storage/cpu-mem-stats /mnt/usb-storage/cpu-mem-stats-$1-$2-$DATE.stat &
+
+# wait for user to finish the test
+while true
+do
+    # prompt user, and read command line argument
+    read -p "Stop the test now? " answer
+
+    # handle the input we were given
+    case $answer in
+
+        [yY]* )
+
+                killall tcpdump
+
+                break;;
+
+        * ) 
+                echo "I'll only accept 'yes' as an answer...";;
+  esac
+done
+
+# scripts started by this script will be stopped anyway (i thinks this makes 
+# this script kill itself, but well)...
+killall sh
+exit
+

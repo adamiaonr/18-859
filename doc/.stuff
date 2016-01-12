@@ -1,0 +1,45 @@
+
+
+divides it 
+in `chunks' of a given size
+
+ its chunks as it
+receives interests, or once per second, whichever is faster.
+
+is for the CCN client side (on PC1) to reach the keys of the repository running on PC2
+
+(...) chunk sizes (default is 4096 bytes) (...)
+
+At the moment, we're just relying on IP fragmentation to transport larger
+objects, so the likelihood of dropping a response increases rapidly with the
+number of fragments.  Eventually we want to have better ccnx-specific
+fragmentation that will take advantage of the packets that do make it
+across.
+
+(...) flow control mechanism of the \verb+ccncatchunks+ and 
+\verb+ccnsendchunks+ applications (...)
+
+(...) 
+
+"ccnsendchunks"   Given your
+numbers, it sounds like you waited for ccnsendchunks to complete before you
+fired up ccncatchunks or ccncatchunks2.
+
+The ccncatchunks2 tool was written as a proof of concept that pipelining could 
+work with the ccn protocols. As such it is very rudimentary compared to what 
+tcp does.
+
+The tool does try to develop a rtt estimate, but the math used is simplistic, 
+basically decreasing the estimate by a tiny fraction when the content comes 
+back in time, and increasing it by a larger fraction when the content arrives 
+late (or not at all).
+
+The window size is a maximum, but the backoff strategy is probably much too 
+aggressive; I suspect that you are seeing the effects of that.
+
+The basic ccn balance between interests and content provides the flow control.
+
+The status line that ccncatchunks2 prints periodically has clues to what is 
+going on, including the current pipeline size.  Could you post a few of them?
+
+(...) content sources (...)
